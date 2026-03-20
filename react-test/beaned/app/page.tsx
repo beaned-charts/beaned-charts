@@ -82,6 +82,13 @@ export default function Home() {
             <div dangerouslySetInnerHTML={{ __html: charts.line }} />
           </div>
         </div>
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300 opacity-80">Pie Chart</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 opacity-70">Interactive donut chart with percentage tooltips.</p>
+          <div className="flex justify-center">
+            <div dangerouslySetInnerHTML={{ __html: charts.pie }} />
+          </div>
+        </div>
       </div>
     </div>
   );
