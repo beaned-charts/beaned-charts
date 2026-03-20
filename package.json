@@ -1,6 +1,6 @@
 {
   "name": "beaned-charts",
-  "version": "2.3.0",
+  "version": "3.3.0",
   "description": "Beautiful SVG chart library with advanced color palettes and modern styling",
   "main": "index.js",
   "files": [
@@ -19,7 +19,7 @@
     "test": "node test/test.js"
   },
   "dependencies": {
-    "beaned-charts": "^2.3.0",
+    "beaned-charts": "^3.3.0",
     "chroma-js": "^2.4.2",
     "d3-scale-chromatic": "^3.1.0",
     "lodash": "^4.17.21"
