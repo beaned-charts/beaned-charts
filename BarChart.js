@@ -288,7 +288,7 @@ class BarChart {
                 </text>`;
       }
 
-      // Add tooltip (conditional)
+      // Add tooltip data to render at the end (conditional)
       if (this.showTooltips) {
         const rawLabelText = item.label || `Item ${index + 1}`;
         const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(rawLabelText) : rawLabelText;
@@ -300,21 +300,20 @@ class BarChart {
         const tooltipX = x + barWidth/2 - tooltipWidth/2;
         const tooltipY = y - tooltipHeight - 12;
 
-        // Check if custom tooltip content is provided
-        if (this.tooltipCustomContent) {
-          svg += this.tooltipCustomContent(item, index, baseColor, tooltipX, tooltipY, tooltipWidth, tooltipHeight);
-        } else {
-          // Default tooltip content
-          svg += `<g class="tooltip">
-            <rect class="tooltip-rect" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}" />
-
-            <text class="tooltip-title" x="${tooltipX + 12}" y="${tooltipY + 22}">${titleText}</text>
-
-            <rect class="tooltip-marker" x="${tooltipX + 12}" y="${tooltipY + 34}" width="10" height="10" fill="${baseColor}" />
-            <text class="tooltip-label" x="${tooltipX + 28}" y="${tooltipY + 43}">Value</text>
-            <text class="tooltip-value" x="${tooltipX + tooltipWidth - 12}" y="${tooltipY + 43}">${valueText}</text>
-          </g>`;
-        }
+        // Collect tooltip data for rendering at the end
+        tooltipsToRender.push({
+          x: tooltipX,
+          y: tooltipY,
+          width: tooltipWidth,
+          height: tooltipHeight,
+          title: titleText,
+          label: labelText,
+          value: valueText,
+          color: baseColor,
+          customContent: this.tooltipCustomContent,
+          item: item,
+          index: index
+        });
       }
 
       // Add X-axis labels (conditional)

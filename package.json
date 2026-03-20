@@ -1,6 +1,6 @@
 {
   "name": "beaned-charts",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Beautiful SVG chart library with advanced color palettes and modern styling",
   "main": "index.js",
   "files": [

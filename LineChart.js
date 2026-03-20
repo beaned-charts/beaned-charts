@@ -79,6 +79,9 @@ class LineChart {
   }
 
   render() {
+    // Array to collect tooltips for rendering at the end (to ensure they appear on top)
+    const tooltipsToRender = [];
+
     // Calculate data range with custom options
     const dataValues = this.data.map(d => d.value);
     const dataMin = Math.min(...dataValues);
