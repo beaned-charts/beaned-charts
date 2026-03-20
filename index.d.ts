@@ -62,7 +62,10 @@ export declare class ReactChartComponents {
   static createAreaChart(data: any[], options?: any): string;
   static createBarChart(data: any[], options?: any): string;
   static createLineChart(data: any[], options?: any): string;
+  static createPieChart(data: any[], options?: PieChartOptions): string;
   private static createAreaPath(data: any[], dataKey: string, margin: any, chartWidth: number, chartHeight: number, maxValue: number, minDate: Date, maxDate: Date): string;
   private static createAxes(data: any[], margin: any, chartWidth: number, chartHeight: number, minDate: Date, maxDate: Date): string;
   private static createSmoothPath(points: any[]): string;
+  private static createPieSlicePath(centerX: number, centerY: number, outerRadius: number, innerRadius: number, startAngle: number, endAngle: number): string;
+  private static polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number): { x: number; y: number };
 }
