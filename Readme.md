@@ -4,6 +4,14 @@
 [![npm version](https://badge.fury.io/js/beaned-charts.svg)](https://badge.fury.io/js/beaned-charts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center">
+  <a href="https://github.com/ez0000001000000">
+    <img src="https://cdn.gamma.app/0q3kwkx42ofh0ga/ff2f457607404cbab7f9903c831d3aa8/original/EZ-trending.png" alt="EZ Trending">
+  </a>
+</p>
+
+
+
 **Beautiful SVG chart library with advanced color palettes, modern styling, and always-visible tooltips.** Create stunning, responsive charts with pure JavaScript!
 
 ## ✨ Latest Updates (2.3.0)
