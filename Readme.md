@@ -6,7 +6,7 @@
 
 **Beautiful SVG chart library with advanced color palettes, modern styling, and always-visible tooltips.** Create stunning, responsive charts with pure JavaScript!
 
-## ✨ Latest Updates (v2.1.4)
+## ✨ Latest Updates (2.3.0)
 - **Always-Visible Tooltips**: Tooltips now render on top of all chart elements (z-index fix) - never get cut off!
 - **Customizable Tooltips**: Configure tooltip content with `tooltipValueFormat`, `tooltipLabelFormat`, `tooltipTitleFormat`, and custom content
 - **PieChart in Demo**: Added interactive pie charts to the React demo with hover effects
