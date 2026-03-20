@@ -7,7 +7,7 @@
     "index.js",
     "index.d.ts",
     "BarChart.js",
-    "LineChart.js", 
+    "LineChart.js",
     "PieChart.js",
     "utils.js",
     "react-components.js",
@@ -19,6 +19,7 @@
     "test": "node test/test.js"
   },
   "dependencies": {
+    "beaned-charts": "^2.3.0",
     "chroma-js": "^2.4.2",
     "d3-scale-chromatic": "^3.1.0",
     "lodash": "^4.17.21"

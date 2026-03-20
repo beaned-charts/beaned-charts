@@ -1,0 +1,69 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      beaned-charts:
+        specifier: ^2.3.0
+        version: 2.3.0
+      chroma-js:
+        specifier: ^2.4.2
+        version: 2.6.0
+      d3-scale-chromatic:
+        specifier: ^3.1.0
+        version: 3.1.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.23
+
+packages:
+
+  beaned-charts@2.3.0:
+    resolution: {integrity: sha512-YwYPz+Pqp+oQQEnsMkOKpr8dq47579DbmIsiTiB9L6sdzJTQII/5aDW79egV16ikjBV1VSL7D7t+CAR4ww/U3w==}
+    engines: {node: '>=14.0.0'}
+
+  chroma-js@2.6.0:
+    resolution: {integrity: sha512-BLHvCB9s8Z1EV4ethr6xnkl/P2YRFOGqfgvuMG/MyCbZPrTA+NeiByY6XvgF0zP4/2deU2CXnWyMa3zu1LqQ3A==}
+
+  d3-color@3.1.0:
+    resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
+    engines: {node: '>=12'}
+
+  d3-interpolate@3.0.1:
+    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
+    engines: {node: '>=12'}
+
+  d3-scale-chromatic@3.1.0:
+    resolution: {integrity: sha512-A3s5PWiZ9YCXFye1o246KoscMWqf8BsD9eRiJ3He7C9OBaxKhAd5TFCdEx/7VbKtxxTsu//1mMJFrEt572cEyQ==}
+    engines: {node: '>=12'}
+
+  lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
+
+snapshots:
+
+  beaned-charts@2.3.0:
+    dependencies:
+      chroma-js: 2.6.0
+      d3-scale-chromatic: 3.1.0
+      lodash: 4.17.23
+
+  chroma-js@2.6.0: {}
+
+  d3-color@3.1.0: {}
+
+  d3-interpolate@3.0.1:
+    dependencies:
+      d3-color: 3.1.0
+
+  d3-scale-chromatic@3.1.0:
+    dependencies:
+      d3-color: 3.1.0
+      d3-interpolate: 3.0.1
+
+  lodash@4.17.23: {}

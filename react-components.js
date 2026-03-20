@@ -106,21 +106,26 @@ class ReactChartComponents {
       const desktopY = margin.top + chartHeight - (item.desktop / maxValue) * chartHeight;
       const mobileY = margin.top + chartHeight - (item.mobile / maxValue) * chartHeight;
 
+      // Dynamic tooltip positioning based on data point location
+      const chartMidpoint = margin.top + chartHeight / 2;
+      const tooltipOffset = 70;
+      const tooltipY = desktopY < chartMidpoint ? desktopY + tooltipOffset : desktopY - tooltipOffset;
+
       svg += `<g class="area-group">
         <circle cx="${x}" cy="${desktopY}" r="4" fill="#3b82f6" stroke="white" stroke-width="2" class="data-point desktop"/>
         <circle cx="${x}" cy="${mobileY}" r="4" fill="#10b981" stroke="white" stroke-width="2" class="data-point mobile"/>
         
         <g class="tooltip">
-          <rect class="tooltip-rect" x="${x - 70}" y="${desktopY - 70}" width="140" height="60" />
-          <text class="tooltip-title" x="${x - 58}" y="${desktopY - 48}">${new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</text>
+          <rect class="tooltip-rect" x="${x - 70}" y="${tooltipY}" width="140" height="60" />
+          <text class="tooltip-title" x="${x - 58}" y="${tooltipY + 22}">${new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</text>
           
-          <rect class="tooltip-marker" x="${x - 58}" y="${desktopY - 36}" width="8" height="8" fill="#3b82f6" />
-          <text class="tooltip-label" x="${x - 46}" y="${desktopY - 29}">Desktop</text>
-          <text class="tooltip-value" x="${x + 58}" y="${desktopY - 29}">${item.desktop}</text>
+          <rect class="tooltip-marker" x="${x - 58}" y="${tooltipY + 34}" width="8" height="8" fill="#3b82f6" />
+          <text class="tooltip-label" x="${x - 46}" y="${tooltipY + 41}">Desktop</text>
+          <text class="tooltip-value" x="${x + 58}" y="${tooltipY + 41}">${item.desktop}</text>
           
-          <rect class="tooltip-marker" x="${x - 58}" y="${desktopY - 22}" width="8" height="8" fill="#10b981" />
-          <text class="tooltip-label" x="${x - 46}" y="${desktopY - 15}">Mobile</text>
-          <text class="tooltip-value" x="${x + 58}" y="${desktopY - 15}">${item.mobile}</text>
+          <rect class="tooltip-marker" x="${x - 58}" y="${tooltipY + 48}" width="8" height="8" fill="#10b981" />
+          <text class="tooltip-label" x="${x - 46}" y="${tooltipY + 55}">Mobile</text>
+          <text class="tooltip-value" x="${x + 58}" y="${tooltipY + 55}">${item.mobile}</text>
         </g>
       </g>`;
     });
