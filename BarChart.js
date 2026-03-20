@@ -290,21 +290,28 @@ class BarChart {
         const rawLabelText = item.label || `Item ${index + 1}`;
         const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(rawLabelText) : rawLabelText;
         const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : item.value.toString();
-        
+        const titleText = this.tooltipTitleFormat ? this.tooltipTitleFormat(item, index) : labelText;
+
         const tooltipWidth = 140;
         const tooltipHeight = 60;
         const tooltipX = x + barWidth/2 - tooltipWidth/2;
         const tooltipY = y - tooltipHeight - 12;
 
-        svg += `<g class="tooltip">
-          <rect class="tooltip-rect" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}" />
-          
-          <text class="tooltip-title" x="${tooltipX + 12}" y="${tooltipY + 22}">${labelText}</text>
-          
-          <rect class="tooltip-marker" x="${tooltipX + 12}" y="${tooltipY + 34}" width="10" height="10" fill="${baseColor}" />
-          <text class="tooltip-label" x="${tooltipX + 28}" y="${tooltipY + 43}">Value</text>
-          <text class="tooltip-value" x="${tooltipX + tooltipWidth - 12}" y="${tooltipY + 43}">${valueText}</text>
-        </g>`;
+        // Check if custom tooltip content is provided
+        if (this.tooltipCustomContent) {
+          svg += this.tooltipCustomContent(item, index, baseColor, tooltipX, tooltipY, tooltipWidth, tooltipHeight);
+        } else {
+          // Default tooltip content
+          svg += `<g class="tooltip">
+            <rect class="tooltip-rect" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}" />
+
+            <text class="tooltip-title" x="${tooltipX + 12}" y="${tooltipY + 22}">${titleText}</text>
+
+            <rect class="tooltip-marker" x="${tooltipX + 12}" y="${tooltipY + 34}" width="10" height="10" fill="${baseColor}" />
+            <text class="tooltip-label" x="${tooltipX + 28}" y="${tooltipY + 43}">Value</text>
+            <text class="tooltip-value" x="${tooltipX + tooltipWidth - 12}" y="${tooltipY + 43}">${valueText}</text>
+          </g>`;
+        }
       }
 
       // Add X-axis labels (conditional)
