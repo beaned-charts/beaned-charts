@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://github.com/ez0000001000000">
-    <img src="https://cdn.gamma.app/0q3kwkx42ofh0ga/ff2f457607404cbab7f9903c831d3aa8/original/EZ-trending.png" alt="EZ Trending">
+    <img src="[https://cdn.gamma.app/0q3kwkx42ofh0ga/ff2f457607404cbab7f9903c831d3aa8/original/EZ-trending.png](https://cdn.gamma.app/0q3kwkx42ofh0ga/c2e5253363ca4f7db5b7735b475c6247/original/EZ-Trend.png)" alt="EZ Trending">
   </a>
 </p>
 
