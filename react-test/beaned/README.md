@@ -1,8 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Beaned-Charts Demo
 
-## Getting Started
+A Next.js demo application showcasing the latest features of Beaned-Charts v3.3.0.
 
-First, run the development server:
+## ✨ Features Demonstrated
+
+### 📊 Chart Types
+- **AreaChart**: Multi-series area charts with gradient fills and smooth curves
+- **BarChart**: Customizable bar charts with hover effects and animations
+- **LineChart**: Interactive line charts with crosshair and customizable points
+- **PieChart**: Donut/pie charts with explode effects and percentage tooltips
+
+### 🎨 Latest Improvements
+- **Always-Visible Tooltips**: Tooltips render on top of all elements (z-index fix)
+- **Dynamic Positioning**: Tooltips automatically position above/below based on data point location
+- **Customizable Formatting**: Configure tooltip content with format functions
+- **Advanced Styling**: Professional gradients, animations, and hover effects
+- **Container-Free Rendering**: No clipping issues in React applications
+
+## 🚀 Getting Started
+
+First, install the latest Beaned-Charts:
+
+```bash
+pnpm add beaned-charts@latest
+# or
+npm install beaned-charts@latest
+# or
+yarn add beaned-charts@latest
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +41,48 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the interactive chart demo.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📱 Demo Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Responsive Design**: Charts adapt to different screen sizes
+- **Interactive Hover**: Hover over data points to see detailed tooltips
+- **Smooth Animations**: Professional transitions and effects
+- **Modern UI**: Clean, modern design with proper spacing
 
-## Learn More
+## 🎯 Chart Configuration
 
-To learn more about Next.js, take a look at the following resources:
+The demo showcases various configuration options:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```javascript
+const chartOptions = {
+  width: 600,
+  height: 400,
+  theme: 'dark',
+  colors: ['#ff6b6b', '#4ecdc4', '#45b7d1'],
+  tooltipValueFormat: (val) => `$${val.toFixed(2)}`,
+  hoverEffects: true,
+  showTooltips: true
+};
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Dependencies
 
-## Deploy on Vercel
+- `beaned-charts`: Latest chart library with SVG rendering
+- `next`: React framework for the demo
+- `react`: UI library
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Deploy on Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy this demo instantly using Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ez0000001000000/beaned-charts)
+
+## 📚 Learn More
+
+- [Beaned-Charts Documentation](https://github.com/ez0000001000000/beaned-charts)
+- [Next.js Documentation](https://nextjs.org/docs)
+
+---
+
+**Beaned-Charts** - Simple. Beautiful. Charts. ✨

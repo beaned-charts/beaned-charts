@@ -397,6 +397,150 @@ class ReactChartComponents {
     path += ` L ${points[points.length - 1].x},${points[points.length - 1].y}`;
     return path;
   }
+
+  static createPieChart(data, options = {}) {
+    const { width = 500, height = 400, holeSize = 0.3, explodeSlices = true, showCenterLabel = true, centerLabelText = 'Total', colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'] } = options;
+
+    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
+    
+    svg += `<style>
+      .slice { 
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        cursor: pointer;
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.08));
+      }
+      .slice:hover { 
+        filter: drop-shadow(0 3px 8px rgba(0,0,0,0.25));
+        transform-origin: center;
+        transform: scale(1.05);
+      }
+      .tooltip {
+        opacity: 0;
+        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .tooltip-rect {
+        fill: rgba(255, 255, 255, 0.95);
+        rx: 10px;
+        stroke: #e5e7eb;
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: #111827;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: 11px;
+      }
+
+      .tooltip-value {
+        fill: #111827;
+        font-size: 11px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+
+      .slice-group:hover .tooltip {
+        opacity: 1;
+      }
+
+      .percentage-label {
+        fill: #111827;
+        font-size: 12px;
+        font-weight: 600;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+
+      .center-label {
+        fill: #111827;
+        font-size: 14px;
+        font-weight: 600;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+    </style>`;
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(centerX, centerY) - 60;
+    const holeRadius = holeSize ? radius * holeSize : 0;
+
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+    let currentAngle = 0;
+
+    // Create slices
+    data.forEach((item, index) => {
+      const percentage = item.value / total;
+      const angle = percentage * 360;
+
+      if (percentage > 0) {
+        const startAngle = currentAngle;
+        const endAngle = currentAngle + angle;
+        const midAngle = currentAngle + angle / 2;
+
+        const explodeOffset = explodeSlices ? 5 : 0;
+        const explodeX = centerX + Math.cos((midAngle - 90) * Math.PI / 180) * explodeOffset;
+        const explodeY = centerY + Math.sin((midAngle - 90) * Math.PI / 180) * explodeOffset;
+
+        // Create slice path
+        const slicePath = this.createPieSlicePath(explodeX, explodeY, radius, holeRadius, startAngle, endAngle);
+
+        svg += `<g class="slice-group">
+          <path class="slice" d="${slicePath}" fill="${colors[index % colors.length]}" />
+          
+          ${percentage > 0.05 ? `<text class="percentage-label" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (holeRadius > 0 ? (radius + holeRadius) / 2 : radius * 0.7)}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (holeRadius > 0 ? (radius + holeRadius) / 2 : radius * 0.7)}">${Math.round(percentage * 100)}%</text>` : ''}
+          
+          ${showCenterLabel && holeRadius > 0 && percentage > 0.1 ? `<text class="center-label" x="${centerX}" y="${centerY}">${centerLabelText}</text>` : ''}
+          
+          <g class="tooltip">
+            <rect class="tooltip-rect" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (radius + 50) - 70}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (radius + 50) - 30}" width="140" height="60" />
+            <text class="tooltip-title" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (radius + 50) - 58}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (radius + 50) - 8}">${item.label}</text>
+            <rect class="tooltip-marker" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (radius + 50) - 58}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (radius + 50) + 4}" width="10" height="10" fill="${colors[index % colors.length]}" />
+            <text class="tooltip-label" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (radius + 50) - 44}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (radius + 50) + 13}">Value</text>
+            <text class="tooltip-value" x="${explodeX + Math.cos((midAngle - 90) * Math.PI / 180) * (radius + 50) + 58}" y="${explodeY + Math.sin((midAngle - 90) * Math.PI / 180) * (radius + 50) + 13}">${item.value}</text>
+          </g>
+        </g>`;
+
+        currentAngle += angle;
+      }
+    });
+
+    svg += '</svg>';
+    return svg;
+  }
+
+  static createPieSlicePath(centerX, centerY, outerRadius, innerRadius, startAngle, endAngle) {
+    const start = this.polarToCartesian(centerX, centerY, outerRadius, startAngle);
+    const end = this.polarToCartesian(centerX, centerY, outerRadius, endAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+    if (innerRadius === 0) {
+      return `M ${centerX} ${centerY} L ${start.x} ${start.y} A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
+    } else {
+      const innerStart = this.polarToCartesian(centerX, centerY, innerRadius, endAngle);
+      const innerEnd = this.polarToCartesian(centerX, centerY, innerRadius, startAngle);
+      return `M ${start.x} ${start.y} A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${end.x} ${end.y} L ${innerStart.x} ${innerStart.y} A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${innerEnd.x} ${innerEnd.y} Z`;
+    }
+  }
+
+  static polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
 }
 
 module.exports = ReactChartComponents;

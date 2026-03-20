@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ReactChartComponents } from 'beaned-charts';
 
 export default function Home() {
-  const [charts, setCharts] = useState({ area: '', bar: '', line: '' });
+  const [charts, setCharts] = useState({ area: '', bar: '', line: '', pie: '' });
 
   useEffect(() => {
     // Sample data for Area Chart
@@ -41,11 +41,20 @@ export default function Home() {
       { value: 55 }
     ];
 
+    // Sample data for Pie Chart
+    const pieData = [
+      { label: 'Desktop', value: 45 },
+      { label: 'Mobile', value: 35 },
+      { label: 'Tablet', value: 15 },
+      { label: 'Other', value: 5 }
+    ];
+
     const areaChart = ReactChartComponents.createAreaChart(areaData, { width: 800, height: 400 });
     const barChart = ReactChartComponents.createBarChart(barData, { width: 600, height: 350 });
     const lineChart = ReactChartComponents.createLineChart(lineData, { width: 600, height: 300, smooth: true, color: '#10b981' });
+    const pieChart = ReactChartComponents.createPieChart(pieData, { width: 500, height: 400, holeSize: 0.3, explodeSlices: true, showCenterLabel: true, centerLabelText: 'Traffic Sources' });
 
-    setCharts({ area: areaChart, bar: barChart, line: lineChart });
+    setCharts({ area: areaChart, bar: barChart, line: lineChart, pie: pieChart });
   }, []);
 
   return (
