@@ -1,7 +1,7 @@
 // Beaned-Charts BarChart
 // Professional bar chart with customizable dimensions and styling
 
-const { SVGFactory, normalizeCoordinate, getColor } = require('./utils');
+const { SVGFactory, normalizeCoordinate, getColor, createGradient, createAreaGradient, adjustColorBrightness } = require('./utils');
 
 class BarChart {
   constructor(data, options = {}) {
@@ -13,6 +13,7 @@ class BarChart {
 
     // Colors and themes
     this.colors = options.colors || [];
+    this.colorPalette = options.colorPalette || 'default'; // New: color palette option
     this.theme = options.theme || 'light';
     this.backgroundColor = options.backgroundColor || (this.theme === 'dark' ? '#1a1a1a' : '#ffffff');
     this.gridColor = options.gridColor || (this.theme === 'dark' ? '#333333' : '#e5e5e5');
@@ -141,15 +142,14 @@ class BarChart {
       .bar {
         transition: all ${this.animationDuration}ms ${this.animationEasing};
         cursor: ${this.hoverEffects ? 'pointer' : 'default'};
-        filter: ${this.hoverEffects ? 'drop-shadow(0 1px 3px rgba(0,0,0,0.1))' : 'none'};
         rx: ${this.barBorderRadius};
         fill-opacity: ${this.barOpacity};
       }
 
       .bar:hover {
-        ${this.hoverEffects ? `filter: drop-shadow(0 3px 8px rgba(0,0,0,0.15));
-        transform: translateY(-2px);
-        fill-opacity: ${this.barHoverOpacity};` : ''}
+        ${this.hoverEffects ? `
+        fill-opacity: ${this.barHoverOpacity};
+        filter: saturate(1.2) brightness(1.1);` : ''}
       }
 
       .bar-group:hover .bar {
@@ -175,6 +175,36 @@ class BarChart {
         pointer-events: none;
       }
 
+      .tooltip-rect {
+        fill: ${this.tooltipBackgroundColor};
+        rx: 10px;
+        stroke: ${this.tooltipBorderColor};
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize + 1}px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: ${this.tooltipFontSize}px;
+      }
+
+      .tooltip-value {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize}px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+
       .bar-group:hover .tooltip {
         ${this.showTooltips ? 'opacity: 1;' : ''}
       }
@@ -196,7 +226,7 @@ class BarChart {
 
     // Background (conditional and customizable)
     if (this.showBackground) {
-      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="${this.barBorderRadius * 2}" />`;
+      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="12" />`;
     }
 
     svg += SVGFactory.createGroup();
@@ -231,17 +261,14 @@ class BarChart {
       const x = this.padding + spacing + index * (barWidth + spacing);
       const y = this.height - this.padding - barHeight;
 
-      // Custom color gradients
+      // Custom color gradients using chroma-js
       const gradientId = `bar-gradient-${index}`;
-      const baseColor = this.barColor || this.colors[index] || getColor(index);
-      const hoverColor = this.barHoverColor || this.adjustColorBrightness(baseColor, -0.1);
+      const baseColor = this.barColor || this.colors[index] || getColor(index, this.colorPalette);
+      const hoverColor = this.barHoverColor || adjustColorBrightness(baseColor, -0.1);
 
-      // Add gradient definition
+      // Add gradient definition with enhanced colors
       svg += `<defs>
-        <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:${baseColor};stop-opacity:${this.barOpacity}" />
-          <stop offset="100%" style="stop-color:${baseColor};stop-opacity:${this.barOpacity * 0.7}" />
-        </linearGradient>
+        ${createGradient(baseColor, adjustColorBrightness(baseColor, -0.2), gradientId, 'vertical')}
       </defs>`;
 
       svg += SVGFactory.createGroup({ class: 'bar-group' });
@@ -261,48 +288,22 @@ class BarChart {
       // Add tooltip (conditional)
       if (this.showTooltips) {
         const rawLabelText = item.label || `Item ${index + 1}`;
-        const rawValueText = item.value.toString();
         const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(rawLabelText) : rawLabelText;
-        const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : rawValueText;
-        const maxCharsPerLine = 12;
-
-        const labelLines = Math.ceil(labelText.length / maxCharsPerLine);
-        const valueLines = Math.ceil(valueText.length / maxCharsPerLine);
-        const totalLines = labelLines + valueLines;
-
-        const baseHeight = 20;
-        const lineHeight = 14;
-        const padding = 8;
-        const tooltipHeight = baseHeight + (totalLines - 1) * lineHeight + padding;
-
-        const textWidth = Math.max(labelText.length, valueText.length) * 6 + 20;
-        const fitsInside = barHeight > tooltipHeight + 10 && barWidth > textWidth + 20;
-
-        let tooltipX, tooltipY, tooltipWidth;
-
-        if (fitsInside) {
-          tooltipX = x + barWidth/2 - 40;
-          tooltipY = y + barHeight/2 - tooltipHeight/2;
-          tooltipWidth = Math.max(textWidth, 80);
-        } else {
-          tooltipX = x + barWidth/2 - 40;
-          tooltipY = y - tooltipHeight - 5;
-          tooltipWidth = Math.max(textWidth, 80);
-        }
+        const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : item.value.toString();
+        
+        const tooltipWidth = 140;
+        const tooltipHeight = 60;
+        const tooltipX = x + barWidth/2 - tooltipWidth/2;
+        const tooltipY = y - tooltipHeight - 12;
 
         svg += `<g class="tooltip">
-          <rect x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}"
-                fill="${this.tooltipBackgroundColor}" rx="${this.barBorderRadius}" 
-                stroke="${this.tooltipBorderColor}" stroke-width="1"
-                filter="drop-shadow(0 2px 8px rgba(0,0,0,0.1))" />
-          <text x="${x + barWidth/2}" y="${tooltipY + 15}" text-anchor="middle"
-                fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize}" font-weight="500">
-            ${labelText}
-          </text>
-          <text x="${x + barWidth/2}" y="${tooltipY + 15 + (labelLines * lineHeight)}" text-anchor="middle"
-                fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize + 1}" font-weight="600">
-            ${valueText}
-          </text>
+          <rect class="tooltip-rect" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}" />
+          
+          <text class="tooltip-title" x="${tooltipX + 12}" y="${tooltipY + 22}">${labelText}</text>
+          
+          <rect class="tooltip-marker" x="${tooltipX + 12}" y="${tooltipY + 34}" width="10" height="10" fill="${baseColor}" />
+          <text class="tooltip-label" x="${tooltipX + 28}" y="${tooltipY + 43}">Value</text>
+          <text class="tooltip-value" x="${tooltipX + tooltipWidth - 12}" y="${tooltipY + 43}">${valueText}</text>
         </g>`;
       }
 
@@ -320,23 +321,6 @@ class BarChart {
     svg += SVGFactory.closeSVG();
 
     return svg;
-  }
-
-  adjustColorBrightness(hex, percent) {
-    // Remove # if present
-    hex = hex.replace(/^#/, '');
-
-    // Parse r, g, b values
-    const num = parseInt(hex, 16);
-    const amt = Math.round(2.55 * percent);
-
-    const R = (num >> 16) + amt;
-    const G = (num >> 8 & 0x00FF) + amt;
-    const B = (num & 0x0000FF) + amt;
-
-    return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-      (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-      (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
   }
 }
 

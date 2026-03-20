@@ -1,188 +1,216 @@
-# 🤖 Beaned-Charts AI Agents
+# 🤖 AI Agent Guidelines for Beaned-Charts
 
-This document outlines the AI agents and automation tools used to maintain and develop Beaned-Charts.
+This document contains comprehensive guidelines and rules for AI agents working on the Beaned-Charts project. All AI assistants and automation tools must follow these rules when contributing to the codebase.
 
-## 📋 Agent Overview
+## � Core Principles
 
-### 🔧 Development Agents
+### Code Quality Standards
+- **Zero Dependencies**: Beaned-Charts must maintain its zero-dependency promise
+- **Pure SVG Output**: All charts must generate clean, standards-compliant SVG
+- **Performance First**: Optimize for fast rendering and minimal memory usage
+- **Browser Compatibility**: Support modern browsers (Chrome, Firefox, Safari, Edge)
+- **TypeScript Support**: Maintain full TypeScript definitions for all public APIs
 
-#### Code Quality Agent
-- **Purpose**: Maintains code quality and standards
-- **Responsibilities**:
-  - Automated code linting and formatting
-  - Pre-commit hooks for style enforcement
-  - Dependency vulnerability scanning
-  - Performance monitoring and optimization suggestions
+### File Structure Rules
+- **Main Entry**: `index.js` exports all public APIs
+- **Type Definitions**: `index.d.ts` contains complete TypeScript interfaces
+- **Chart Classes**: `BarChart.js`, `LineChart.js`, `PieChart.js` contain implementations
+- **Utilities**: `utils.js` contains shared helper functions
+- **Documentation**: `README.md`, `styled-charts.md`, `react-test.md` for docs
+- **Tests**: `test/test.js` contains unit tests
+- **Demos**: `demo.js`, `react-demo.js` for examples
 
-#### Documentation Agent
-- **Purpose**: Keeps documentation current and comprehensive
-- **Responsibilities**:
-  - Automated README updates from code changes
-  - API documentation generation from JSDoc comments
-  - Example code validation and testing
-  - Translation management for multi-language docs
+## 🔧 Development Guidelines
 
-#### Testing Agent
-- **Purpose**: Ensures comprehensive test coverage and reliability
-- **Responsibilities**:
-  - Automated test generation for new features
-  - Visual regression testing for chart outputs
-  - Cross-browser compatibility testing
-  - Performance benchmarking and regression detection
+### Code Style Rules
+- **ES6+ Features**: Use modern JavaScript features appropriately
+- **Consistent Indentation**: 2 spaces, no tabs
+- **Descriptive Names**: Use clear, meaningful variable and function names
+- **JSDoc Comments**: Document all public APIs with JSDoc
+- **Error Handling**: Implement proper error handling and validation
+- **Modular Code**: Keep functions focused and single-purpose
 
-### 🚀 Release Management Agents
+### Chart API Design
+- **Constructor Pattern**: All charts use `new ChartClass(data, options)`
+- **Options Object**: Flexible configuration through options parameter
+- **Render Method**: All charts implement `.render()` returning SVG string
+- **Backward Compatibility**: Never break existing APIs without migration path
+- **Sensible Defaults**: Provide good defaults for all optional parameters
 
-#### Version Control Agent
-- **Purpose**: Manages semantic versioning and releases
-- **Responsibilities**:
-  - Automated version bumping based on changes
-  - Changelog generation from commit messages
-  - Release note creation with feature highlights
-  - Git tag management and release branches
+### Testing Requirements
+- **Unit Tests**: Test all chart types and edge cases
+- **Validation**: Test input validation and error conditions
+- **Output Verification**: Verify SVG output contains expected elements
+- **Cross-Browser**: Test rendering in different environments
+- **Performance**: Monitor memory usage and rendering speed
 
-#### NPM Publishing Agent
-- **Purpose**: Handles package publishing and distribution
-- **Responsibilities**:
-  - Automated npm package building and publishing
-  - CDN deployment coordination
-  - Release verification and rollback procedures
-  - Package size monitoring and optimization
+## 📚 Documentation Standards
 
-### 🐛 Issue Management Agents
+### README.md Requirements
+- **Clear Examples**: Show basic usage for each chart type
+- **Installation**: Include npm install instructions
+- **API Reference**: Document all options and methods
+- **Customization Guide**: Explain styling and theming options
+- **Browser Support**: List supported browsers and versions
 
-#### Bug Triage Agent
-- **Purpose**: Efficiently processes and categorizes issues
-- **Responsibilities**:
-  - Automated issue classification (bug, feature, question)
-  - Priority assessment based on impact and urgency
-  - Duplicate detection and linking
-  - Initial response templates for common issues
+### Code Documentation
+- **JSDoc Comments**: Every public method needs JSDoc
+- **Parameter Types**: Document all parameters with types
+- **Return Values**: Specify return types and descriptions
+- **Usage Examples**: Include code examples in comments
+- **Edge Cases**: Document special behaviors and limitations
 
-#### Feature Request Agent
-- **Purpose**: Evaluates and prioritizes feature requests
-- **Responsibilities**:
-  - Feature feasibility analysis
-  - Community voting system management
-  - Roadmap integration and milestone assignment
-  - Technical specification drafting
+## 🚀 Contribution Rules
 
-### 📊 Analytics Agents
+### Pull Request Guidelines
+- **Descriptive Title**: Use clear, specific PR titles
+- **Issue Reference**: Link to related issues when applicable
+- **Testing**: Include tests for new features
+- **Documentation**: Update docs for API changes
+- **Breaking Changes**: Clearly mark and explain breaking changes
+- **Code Review**: Address all review feedback
 
-#### Usage Analytics Agent
-- **Purpose**: Monitors library usage and adoption
-- **Responsibilities**:
-  - NPM download tracking and analysis
-  - GitHub stars and fork monitoring
-  - Website traffic and documentation usage
-  - Performance metrics collection
-
-#### Community Agent
-- **Purpose**: Manages community engagement and support
-- **Responsibilities**:
-  - Automated responses to common questions
-  - Social media monitoring and engagement
-  - Stack Overflow and forum monitoring
-  - Contributor onboarding assistance
-
-## 🔄 CI/CD Pipeline
-
-### Automated Workflows
-
-#### Pull Request Pipeline
+### Commit Message Format
 ```
-Code Push → Lint → Test → Build → Preview Deploy → Review
+type(scope): description
+
+[optional body]
+
+[optional footer]
 ```
 
-#### Release Pipeline
+**Types:**
+- `feat`: New features
+- `fix`: Bug fixes
+- `docs`: Documentation
+- `style`: Code style changes
+- `refactor`: Code refactoring
+- `test`: Testing
+- `chore`: Maintenance
+
+**Examples:**
 ```
-Version Bump → Changelog → Build → Test → Publish → Deploy → Announce
-```
-
-#### Documentation Pipeline
-```
-Code Change → Doc Update → Build → Deploy → Index
-```
-
-## 🎯 Agent Integration Points
-
-### GitHub Integration
-- **Actions**: Automated CI/CD workflows
-- **Issues**: Intelligent issue routing and labeling
-- **PRs**: Automated reviews and merge management
-- **Releases**: Automated release creation and publishing
-
-### NPM Integration
-- **Publishing**: Automated package publishing
-- **Versioning**: Semantic version management
-- **Dependencies**: Automated security updates
-
-### Documentation Integration
-- **GitBook/Docusaurus**: Automated documentation updates
-- **API Docs**: Auto-generated from code comments
-- **Examples**: Live code validation
-
-## 📈 Benefits
-
-### Efficiency Gains
-- **24/7 Operation**: Agents work around the clock
-- **Instant Response**: Immediate feedback on contributions
-- **Error Reduction**: Automated quality checks prevent issues
-- **Time Savings**: Developers focus on core features
-
-### Quality Improvements
-- **Consistent Standards**: Automated enforcement of best practices
-- **Comprehensive Testing**: Automated test generation and execution
-- **Documentation Accuracy**: Always up-to-date documentation
-- **Security**: Continuous vulnerability monitoring
-
-### Community Benefits
-- **Faster Issue Resolution**: Intelligent triage and routing
-- **Better Onboarding**: Automated contributor guidance
-- **Feature Planning**: Data-driven roadmap decisions
-- **Transparent Development**: Automated progress tracking
-
-## 🔧 Configuration
-
-### Agent Settings
-
-```json
-{
-  "agents": {
-    "codeQuality": {
-      "enabled": true,
-      "strictness": "high",
-      "autoFix": true
-    },
-    "testing": {
-      "coverage": 95,
-      "visualRegression": true,
-      "performance": true
-    },
-    "documentation": {
-      "autoUpdate": true,
-      "languages": ["en", "zh", "es"],
-      "examples": true
-    }
-  }
-}
+feat: add gradient support to bar charts
+fix: correct tooltip positioning on mobile devices
+docs: update React integration examples
 ```
 
-### Workflow Triggers
+## 🎨 Design System
 
-- **Push to main**: Full CI/CD pipeline
-- **PR creation**: Code quality and testing
-- **Issue creation**: Triage and labeling
-- **Release tag**: Publishing and deployment
-- **Documentation change**: Site rebuild and deploy
+### Color Management
+- **Consistent Palette**: Use predefined color arrays for consistency
+- **Theme Support**: Support light/dark themes
+- **Accessibility**: Ensure sufficient color contrast
+- **Customization**: Allow color overrides in options
 
-## 📞 Support
+### Typography
+- **Font Stacks**: Use system font stacks for performance
+- **Responsive Text**: Scale text appropriately for different sizes
+- **Hierarchy**: Clear visual hierarchy in charts
+- **Readability**: Ensure text is readable at all sizes
 
-For questions about AI agents or automation:
+### Layout & Spacing
+- **Responsive Design**: Charts adapt to container sizes
+- **Consistent Margins**: Use standard spacing units
+- **Grid Systems**: Align elements to logical grids
+- **Touch Targets**: Ensure adequate click/hover areas
 
-- 📧 **Email**: agents@beaned-charts.dev
-- 💬 **Discord**: #ai-agents channel
-- 📖 **Docs**: [Agent Configuration Guide](./agent-config.md)
+## 🔒 Security Guidelines
+
+### Input Validation
+- **Sanitize Data**: Validate all input data types
+- **Size Limits**: Prevent extremely large datasets
+- **XSS Prevention**: Ensure SVG output is safe
+- **Error Boundaries**: Handle errors gracefully
+
+### Performance Limits
+- **Memory Usage**: Monitor heap usage for large datasets
+- **Rendering Time**: Keep initial render under 100ms
+- **Animation Performance**: Use CSS animations over JavaScript
+- **Bundle Size**: Maintain small package size
+
+## 🧪 Testing Strategy
+
+### Unit Tests
+- **Chart Rendering**: Test SVG output structure
+- **Options Handling**: Verify configuration options work
+- **Data Processing**: Test data transformation logic
+- **Edge Cases**: Test with empty data, large datasets, etc.
+
+### Integration Tests
+- **Browser Compatibility**: Test in multiple browsers
+- **Framework Integration**: Verify React/Vue/Angular usage
+- **Build Process**: Test npm packaging and distribution
+
+### Visual Tests
+- **Screenshot Comparison**: Compare rendered charts
+- **Layout Verification**: Check element positioning
+- **Responsive Behavior**: Test different screen sizes
+
+## 📦 Release Process
+
+### Version Management
+- **Semantic Versioning**: Use MAJOR.MINOR.PATCH format
+- **Breaking Changes**: Increment MAJOR for API breaks
+- **New Features**: Increment MINOR for new functionality
+- **Bug Fixes**: Increment PATCH for fixes
+
+### Release Checklist
+- [ ] All tests pass
+- [ ] Documentation updated
+- [ ] TypeScript definitions current
+- [ ] NPM package builds correctly
+- [ ] Browser compatibility verified
+- [ ] Performance benchmarks pass
+- [ ] Security scan completed
+
+## 🚨 Critical Rules
+
+### Never Break These Rules
+1. **Zero Dependencies**: No external libraries allowed
+2. **SVG Only**: Charts must output pure SVG strings
+3. **Backward Compatibility**: Existing APIs must continue working
+4. **Performance**: Charts must render quickly
+5. **Security**: Output must be XSS-safe
+6. **Standards**: Follow web standards and best practices
+
+### Forbidden Actions
+- Adding dependencies without approval
+- Breaking existing APIs
+- Including non-SVG output formats
+- Using deprecated browser features
+- Ignoring performance implications
+- Skipping security considerations
+
+## � Support & Communication
+
+### Issue Reporting
+- **Clear Description**: Explain the problem thoroughly
+- **Reproduction Steps**: Provide minimal reproduction case
+- **Environment Details**: Include browser, Node.js version, etc.
+- **Expected vs Actual**: Describe what should happen vs what does
+
+### Feature Requests
+- **Use Case**: Explain why the feature is needed
+- **Implementation Ideas**: Suggest how it could work
+- **Alternatives**: Mention alternative approaches
+- **Scope**: Consider implementation complexity
+
+### Code Review Process
+- **Constructive Feedback**: Focus on code quality and standards
+- **Explain Rationale**: Justify suggestions with reasoning
+- **Collaborative**: Work together to find best solutions
+- **Documentation**: Ensure changes are properly documented
 
 ---
 
-*This document is maintained automatically by our Documentation Agent. Last updated: $(date)*
+## 🤝 Contributing
+
+AI agents should:
+- Follow all guidelines in this document
+- Ask for clarification when unsure
+- Prioritize user experience and code quality
+- Maintain open communication with human developers
+- Document all changes and decisions
+
+*This document is maintained by human developers. AI agents must follow these rules exactly as written.*

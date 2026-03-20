@@ -11,7 +11,7 @@
 [![npm version](https://badge.fury.io/js/beaned-charts.svg)](https://badge.fury.io/js/beaned-charts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Minimalist, zero-dependency SVG chart library for modern web applications.** Create beautiful, responsive charts with pure JavaScript - no frameworks required!
+**Beautiful SVG chart library with advanced color palettes and modern styling.** Create stunning, responsive charts with pure JavaScript - enhanced with professional color schemes and gradients!
 
 
        

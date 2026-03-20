@@ -1,7 +1,7 @@
 // Beaned-Charts PieChart
 // Professional pie/donut chart with interactive slices and extensive customization
 
-const { SVGFactory, polarToCartesian, getColor } = require('./utils');
+const { SVGFactory, polarToCartesian, getColor, createGradient, adjustColorBrightness } = require('./utils');
 
 class PieChart {
   constructor(data, options = {}) {
@@ -12,6 +12,7 @@ class PieChart {
 
     // Colors and themes
     this.colors = options.colors || [];
+    this.colorPalette = options.colorPalette || 'default'; // New: color palette option
     this.theme = options.theme || 'light';
     this.backgroundColor = options.backgroundColor || (this.theme === 'dark' ? '#1a1a1a' : '#ffffff');
     this.textColor = options.textColor || (this.theme === 'dark' ? '#ffffff' : '#333333');
@@ -96,7 +97,36 @@ class PieChart {
         opacity: 0;
         transition: opacity ${this.animationDuration}ms ${this.animationEasing};
         pointer-events: none;
-        backdrop-filter: blur(4px);
+      }
+
+      .tooltip-rect {
+        fill: ${this.tooltipBackgroundColor};
+        rx: 10px;
+        stroke: ${this.tooltipBorderColor};
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize + 1}px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: ${this.tooltipFontSize}px;
+      }
+
+      .tooltip-value {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize}px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
       }
       .slice-group:hover .tooltip {
         ${this.showTooltips ? 'opacity: 1;' : ''}
@@ -129,7 +159,7 @@ class PieChart {
 
     // Background (conditional and customizable)
     if (this.showBackground) {
-      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="8" />`;
+      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="12" />`;
     }
 
     svg += SVGFactory.createGroup();
@@ -149,7 +179,7 @@ class PieChart {
 
         svg += `<path class="slice ${this.explodeSlices ? 'explode' : ''}"
                 d="${this.createSlicePath(explodeX, explodeY, radius, holeRadius, currentAngle, currentAngle + angle)}"
-                fill="${this.sliceColor || this.colors[index] || getColor(index)}"
+                fill="${this.sliceColor || this.colors[index] || getColor(index, this.colorPalette)}"
                 stroke="${this.sliceBorderColor}" stroke-width="${this.sliceBorderWidth}" />`;
 
         // Add percentage label on slice (conditional)
@@ -173,27 +203,24 @@ class PieChart {
 
         // Add tooltip (conditional)
         if (this.showTooltips) {
-          const tooltipRadius = radius + 30;
-          const tooltipPos = polarToCartesian(explodeX, explodeY, tooltipRadius, currentAngle + angle / 2);
+          const tooltipWidth = 140;
+          const tooltipHeight = 60;
+          
+          const labelAngle = currentAngle + angle / 2;
+          const tooltipRadius = radius + 40;
+          const tooltipPos = polarToCartesian(explodeX, explodeY, tooltipRadius, labelAngle);
 
           // Use custom formatting functions
           const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(item.label || `Item ${index + 1}`) : (item.label || `Item ${index + 1}`);
-          const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : item.value;
-          const percentageText = this.tooltipPercentageFormat ? this.tooltipPercentageFormat(Math.round(percentage * 100)) : `${Math.round(percentage * 100)}%`;
+          const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : item.value.toString();
+          const color = this.sliceColor || this.colors[index] || getColor(index, this.colorPalette);
 
           svg += `<g class="tooltip">
-            <rect x="${tooltipPos.x - 45}" y="${tooltipPos.y - 20}" width="90" height="40"
-                  fill="${this.tooltipBackgroundColor}" rx="8" />
-            <rect x="${tooltipPos.x - 45}" y="${tooltipPos.y - 20}" width="90" height="40"
-                  fill="${this.tooltipBackgroundColor}" rx="8" stroke="${this.tooltipBorderColor}" stroke-width="1" />
-            <text x="${tooltipPos.x}" y="${tooltipPos.y - 2}" text-anchor="middle"
-                  fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize}" font-weight="500">
-              ${labelText}
-            </text>
-            <text x="${tooltipPos.x}" y="${tooltipPos.y + 10}" text-anchor="middle"
-                  fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize + 1}" font-weight="bold">
-              ${valueText} (${percentageText})
-            </text>
+            <rect class="tooltip-rect" x="${tooltipPos.x - tooltipWidth/2}" y="${tooltipPos.y - tooltipHeight/2}" width="${tooltipWidth}" height="${tooltipHeight}" />
+            <text class="tooltip-title" x="${tooltipPos.x - tooltipWidth/2 + 12}" y="${tooltipPos.y - tooltipHeight/2 + 22}">${labelText}</text>
+            <rect class="tooltip-marker" x="${tooltipPos.x - tooltipWidth/2 + 12}" y="${tooltipPos.y - tooltipHeight/2 + 34}" width="10" height="10" fill="${color}" />
+            <text class="tooltip-label" x="${tooltipPos.x - tooltipWidth/2 + 28}" y="${tooltipPos.y - tooltipHeight/2 + 43}">Value</text>
+            <text class="tooltip-value" x="${tooltipPos.x + tooltipWidth/2 - 12}" y="${tooltipPos.y - tooltipHeight/2 + 43}">${valueText}</text>
           </g>`;
         }
 

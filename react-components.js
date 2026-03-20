@@ -23,8 +23,38 @@ class ReactChartComponents {
         opacity: 0;
         transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
-        backdrop-filter: blur(4px);
       }
+
+      .tooltip-rect {
+        fill: rgba(255, 255, 255, 0.95);
+        rx: 10px;
+        stroke: #e5e7eb;
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: #111827;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: 11px;
+      }
+
+      .tooltip-value {
+        fill: #111827;
+        font-size: 11px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+
       .area-group:hover .tooltip {
         opacity: 1;
       }
@@ -81,16 +111,16 @@ class ReactChartComponents {
         <circle cx="${x}" cy="${mobileY}" r="4" fill="#10b981" stroke="white" stroke-width="2" class="data-point mobile"/>
         
         <g class="tooltip">
-          <rect x="${x - 60}" y="${desktopY - 40}" width="120" height="35" fill="rgba(31, 41, 55, 0.95)" rx="6"/>
-          <text x="${x}" y="${desktopY - 20}" text-anchor="middle" fill="white" font-size="10" font-weight="500">
-            ${new Date(item.date).toLocaleDateString()}
-          </text>
-          <text x="${x}" y="${desktopY - 5}" text-anchor="middle" fill="white" font-size="11" font-weight="bold">
-            Desktop: ${item.desktop}
-          </text>
-          <text x="${x}" y="${desktopY + 10}" text-anchor="middle" fill="white" font-size="11" font-weight="bold">
-            Mobile: ${item.mobile}
-          </text>
+          <rect class="tooltip-rect" x="${x - 70}" y="${desktopY - 70}" width="140" height="60" />
+          <text class="tooltip-title" x="${x - 58}" y="${desktopY - 48}">${new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</text>
+          
+          <rect class="tooltip-marker" x="${x - 58}" y="${desktopY - 36}" width="8" height="8" fill="#3b82f6" />
+          <text class="tooltip-label" x="${x - 46}" y="${desktopY - 29}">Desktop</text>
+          <text class="tooltip-value" x="${x + 58}" y="${desktopY - 29}">${item.desktop}</text>
+          
+          <rect class="tooltip-marker" x="${x - 58}" y="${desktopY - 22}" width="8" height="8" fill="#10b981" />
+          <text class="tooltip-label" x="${x - 46}" y="${desktopY - 15}">Mobile</text>
+          <text class="tooltip-value" x="${x + 58}" y="${desktopY - 15}">${item.mobile}</text>
         </g>
       </g>`;
     });
@@ -171,8 +201,38 @@ class ReactChartComponents {
         opacity: 0;
         transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
-        backdrop-filter: blur(4px);
       }
+
+      .tooltip-rect {
+        fill: rgba(255, 255, 255, 0.95);
+        rx: 10px;
+        stroke: #e5e7eb;
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: #111827;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: 11px;
+      }
+
+      .tooltip-value {
+        fill: #111827;
+        font-size: 11px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+
       .bar-group:hover .tooltip {
         opacity: 1;
       }
@@ -189,14 +249,12 @@ class ReactChartComponents {
                 fill="${colors[index % colors.length]}" rx="3"/>
         
         <g class="tooltip">
-          <rect x="${x + barWidth/2 - 40}" y="${y - 35}" width="80" height="30" 
-                fill="rgba(31, 41, 55, 0.95)" rx="6"/>
-          <text x="${x + barWidth/2}" y="${y - 20}" text-anchor="middle" fill="white" font-size="10" font-weight="500">
-            ${item.label}
-          </text>
-          <text x="${x + barWidth/2}" y="${y + 5}" text-anchor="middle" fill="white" font-size="12" font-weight="bold">
-            ${item.value}
-          </text>
+          <rect class="tooltip-rect" x="${x + barWidth/2 - 70}" y="${y - 70}" width="140" height="60" />
+          <text class="tooltip-title" x="${x + barWidth/2 - 58}" y="${y - 48}">${item.label}</text>
+          
+          <rect class="tooltip-marker" x="${x + barWidth/2 - 58}" y="${y - 36}" width="10" height="10" fill="${colors[index % colors.length]}" />
+          <text class="tooltip-label" x="${x + barWidth/2 - 44}" y="${y - 27}">Value</text>
+          <text class="tooltip-value" x="${x + barWidth/2 + 58}" y="${y - 27}">${item.value}</text>
         </g>
       </g>`;
     });
@@ -234,6 +292,45 @@ class ReactChartComponents {
         r: 6;
         filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
       }
+      .tooltip {
+        opacity: 0;
+        transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .tooltip-rect {
+        fill: rgba(255, 255, 255, 0.95);
+        rx: 10px;
+        stroke: #e5e7eb;
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: #111827;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: 11px;
+      }
+
+      .tooltip-value {
+        fill: #111827;
+        font-size: 11px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+
+      .point-group:hover .tooltip {
+        opacity: 1;
+      }
     </style>`;
 
     const maxValue = Math.max(...data.map(d => d.value));
@@ -256,7 +353,17 @@ class ReactChartComponents {
 
     // Add data points
     points.forEach((point, index) => {
-      svg += `<circle class="data-point" cx="${point.x}" cy="${point.y}" r="4" fill="${color}" stroke="white" stroke-width="2"/>`;
+      svg += `<g class="point-group">
+        <circle class="data-point" cx="${point.x}" cy="${point.y}" r="4" fill="${color}" stroke="white" stroke-width="2"/>
+        <g class="tooltip">
+          <rect class="tooltip-rect" x="${point.x - 70}" y="${point.y - 70}" width="140" height="60" />
+          <text class="tooltip-title" x="${point.x - 58}" y="${point.y - 48}">Point ${index + 1}</text>
+          
+          <rect class="tooltip-marker" x="${point.x - 58}" y="${point.y - 36}" width="10" height="10" fill="${color}" />
+          <text class="tooltip-label" x="${point.x - 44}" y="${point.y - 27}">Value</text>
+          <text class="tooltip-value" x="${point.x + 58}" y="${point.y - 27}">${point.value}</text>
+        </g>
+      </g>`;
     });
 
     svg += `</g>`;

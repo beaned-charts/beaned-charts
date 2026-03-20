@@ -1,7 +1,7 @@
 // Beaned-Charts LineChart
 // Professional line chart with crosshair, smooth curves, and extensive customization
 
-const { SVGFactory, normalizeCoordinate } = require('./utils');
+const { SVGFactory, normalizeCoordinate, getColor, createGradient, adjustColorBrightness } = require('./utils');
 
 class LineChart {
   constructor(data, options = {}) {
@@ -13,12 +13,13 @@ class LineChart {
 
     // Colors and themes
     this.colors = options.colors || [];
+    this.colorPalette = options.colorPalette || 'default'; // New: color palette option
     this.theme = options.theme || 'dark';
     this.backgroundColor = options.backgroundColor || (this.theme === 'dark' ? '#1a1a1a' : '#ffffff');
     this.gridColor = options.gridColor || (this.theme === 'dark' ? '#333333' : '#e5e5e5');
     this.axisColor = options.axisColor || (this.theme === 'dark' ? '#cccccc' : '#666666');
     this.textColor = options.textColor || (this.theme === 'dark' ? '#ffffff' : '#333333');
-    this.lineColor = options.lineColor || '#90EE90'; // Override default colors
+    this.lineColor = options.lineColor || getColor(0, this.colorPalette); // Use new color utility
     this.pointColor = options.pointColor; // Point fill color
     this.pointStrokeColor = options.pointStrokeColor; // Point stroke color
     this.crosshairColor = options.crosshairColor || (this.theme === 'dark' ? '#666666' : '#cccccc');
@@ -127,7 +128,7 @@ class LineChart {
       }
       .data-point {
         fill: ${this.pointColor || this.lineColor};
-        stroke: ${this.pointStrokeColor || this.axisColor};
+        stroke: ${this.pointStrokeColor || adjustColorBrightness(this.pointColor || this.lineColor, 0.3)};
         stroke-width: ${this.pointStrokeWidth};
         fill-opacity: ${this.pointOpacity};
         stroke-opacity: ${this.pointOpacity};
@@ -147,19 +148,49 @@ class LineChart {
       .chart-area:hover .crosshair-line {
         ${this.showCrosshair ? 'opacity: 0.8;' : ''}
       }
-      .crosshair-tooltip {
+      .tooltip {
         opacity: 0;
         transition: opacity ${this.animationDuration}ms ${this.animationEasing};
         pointer-events: none;
       }
-      .chart-area:hover .crosshair-tooltip {
+
+      .tooltip-rect {
+        fill: ${this.tooltipBackgroundColor};
+        rx: 10px;
+        stroke: ${this.tooltipBorderColor};
+        stroke-width: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+      }
+
+      .tooltip-title {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize + 1}px;
+        font-weight: 600;
+      }
+
+      .tooltip-label {
+        fill: #6b7280;
+        font-size: ${this.tooltipFontSize}px;
+      }
+
+      .tooltip-value {
+        fill: ${this.tooltipTextColor};
+        font-size: ${this.tooltipFontSize}px;
+        font-weight: 600;
+        text-anchor: end;
+      }
+
+      .tooltip-marker {
+        rx: 3px;
+      }
+      .chart-area:hover .tooltip {
         ${this.showTooltips ? 'opacity: 1;' : ''}
       }
     </style>`;
 
     // Background (conditional and customizable)
     if (this.showBackground) {
-      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="8" />`;
+      svg += `<rect width="${this.width}" height="${this.height}" fill="${this.backgroundColor}" rx="12" />`;
     }
 
     svg += SVGFactory.createGroup({
@@ -219,8 +250,12 @@ class LineChart {
 
     // Add data points (conditional)
     if (this.showPoints) {
+      const pointColor = this.pointColor || this.lineColor;
+      const pointStrokeColor = this.pointStrokeColor || adjustColorBrightness(pointColor, 0.3);
+      
       points.forEach(point => {
-        svg += `<circle class="data-point" cx="${point.x}" cy="${point.y}" r="${this.pointRadius}" />`;
+        svg += `<circle class="data-point" cx="${point.x}" cy="${point.y}" r="${this.pointRadius}" 
+                fill="${pointColor}" stroke="${pointStrokeColor}" stroke-width="${this.pointStrokeWidth}"/>`;
       });
     }
 
@@ -237,22 +272,15 @@ class LineChart {
 
     // Add crosshair tooltip (conditional)
     if (this.showTooltips) {
-      // Default tooltip content
-      let tooltipValue = '328.00 USD';
-      let tooltipDate = 'Mar 26';
+      const tooltipWidth = 140;
+      const tooltipHeight = 60;
 
-      // Use custom formatting if provided
-      if (this.tooltipValueFormat) {
-        tooltipValue = this.tooltipValueFormat(328.00); // Example value
-      }
-      if (this.tooltipDateFormat) {
-        tooltipDate = this.tooltipDateFormat(new Date()); // Example date
-      }
-
-      svg += `<g class="crosshair-tooltip">
-        <rect x="0" y="0" width="120" height="40" rx="8" fill="${this.tooltipBackgroundColor}" stroke="${this.tooltipBorderColor}" stroke-width="1" />
-        <text x="10" y="18" fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize + 2}" font-weight="600" class="tooltip-value">${tooltipValue}</text>
-        <text x="10" y="32" fill="${this.tooltipTextColor}" font-size="${this.tooltipFontSize - 1}" class="tooltip-date">${tooltipDate}</text>
+      svg += `<g class="tooltip crosshair-tooltip">
+        <rect class="tooltip-rect" x="0" y="0" width="${tooltipWidth}" height="${tooltipHeight}" />
+        <text class="tooltip-title" x="12" y="22" class="tooltip-date">Mar 26</text>
+        <rect class="tooltip-marker" x="12" y="34" width="10" height="10" fill="${this.lineColor}" />
+        <text class="tooltip-label" x="28" y="43">Value</text>
+        <text class="tooltip-value" x="${tooltipWidth - 12}" y="43" class="tooltip-value">328.00</text>
       </g>`;
     }
 

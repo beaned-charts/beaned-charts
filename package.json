@@ -1,7 +1,7 @@
 {
   "name": "beaned-charts",
-  "version": "1.6.1",
-  "description": "Minimalist, zero-dependency SVG chart library for modern web applications",
+  "version": "2.0.0",
+  "description": "Beautiful SVG chart library with advanced color palettes and modern styling",
   "main": "index.js",
   "files": [
     "index.js",
@@ -18,17 +18,23 @@
   "scripts": {
     "test": "node test/test.js"
   },
+  "dependencies": {
+    "chroma-js": "^2.4.2",
+    "d3-scale-chromatic": "^3.1.0",
+    "lodash": "^4.17.21"
+  },
   "keywords": [
     "svg",
     "charts",
-    "minimalist",
-    "zero-dependency",
+    "beautiful",
+    "modern",
     "bar-chart",
     "line-chart",
     "pie-chart",
     "donut-chart",
     "data-visualization",
-    "lightweight"
+    "color-palettes",
+    "gradients"
   ],
   "author": "Bean-Charts",
   "license": "MIT",

@@ -54,6 +54,15 @@ export declare class SVGFactory {
   static closeGroup(): string;
 }
 
-export declare function getColor(index: number): string;
+export declare function getColor(index: number, palette?: string): string;
 export declare function normalizeCoordinate(value: number, min: number, max: number, targetMin: number, targetMax: number): number;
 export declare function describeArc(x: number, y: number, radius: number, startAngle: number, endAngle: number): string;
+
+export declare class ReactChartComponents {
+  static createAreaChart(data: any[], options?: any): string;
+  static createBarChart(data: any[], options?: any): string;
+  static createLineChart(data: any[], options?: any): string;
+  private static createAreaPath(data: any[], dataKey: string, margin: any, chartWidth: number, chartHeight: number, maxValue: number, minDate: Date, maxDate: Date): string;
+  private static createAxes(data: any[], margin: any, chartWidth: number, chartHeight: number, minDate: Date, maxDate: Date): string;
+  private static createSmoothPath(points: any[]): string;
+}
