@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       beaned-charts:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.0
+        version: 2.1.0
       next:
         specifier: 16.2.0
         version: 16.2.0(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -766,8 +766,8 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  beaned-charts@2.0.0:
-    resolution: {integrity: sha512-trXq0PuI4t+fJM3a9bZRtOY7tmyegM3feYAa4KBaPpT1qgtVMm8NwYtlsoeLXyA4jENFB1HboX1O9n07PD+6yg==}
+  beaned-charts@2.1.0:
+    resolution: {integrity: sha512-2wjC+HKrNxusNdAy7SgH+bvVtLLYtGAqdurGSZcN7apcGK/RJ7rgw/Wt4JpmH3miy/cQJ98FjqeydB7SgR+pAw==}
     engines: {node: '>=14.0.0'}
 
   brace-expansion@1.1.12:
@@ -2642,7 +2642,7 @@ snapshots:
 
   baseline-browser-mapping@2.10.9: {}
 
-  beaned-charts@2.0.0:
+  beaned-charts@2.1.0:
     dependencies:
       chroma-js: 2.6.0
       d3-scale-chromatic: 3.1.0

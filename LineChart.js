@@ -266,25 +266,50 @@ class LineChart {
                          (this.dateFormat ? this.dateFormat(point.date) : point.date) ||
                          `Point ${index + 1}`;
         const formattedLabel = this.xAxisLabelFormat ? this.xAxisLabelFormat(labelText) : labelText;
-        svg += `<text class="x-axis-text" x="${point.x}" y="${this.height - this.padding + 20}">${formattedLabel}</text>`;
+
+        svg += `<text class="x-axis-label" x="${point.x}" y="${this.height - this.padding + 15}"
+                text-anchor="middle" dominant-baseline="middle">${formattedLabel}</text>`;
       });
     }
 
-    // Add crosshair tooltip (conditional)
-    if (this.showTooltips) {
-      const tooltipWidth = 140;
-      const tooltipHeight = 60;
+    svg += SVGFactory.closeGroup();
 
-      svg += `<g class="tooltip crosshair-tooltip">
-        <rect class="tooltip-rect" x="0" y="0" width="${tooltipWidth}" height="${tooltipHeight}" />
-        <text class="tooltip-title" x="12" y="22" class="tooltip-date">Mar 26</text>
-        <rect class="tooltip-marker" x="12" y="34" width="10" height="10" fill="${this.lineColor}" />
-        <text class="tooltip-label" x="28" y="43">Value</text>
-        <text class="tooltip-value" x="${tooltipWidth - 12}" y="43" class="tooltip-value">328.00</text>
-      </g>`;
+    // Add tooltips LAST to ensure they render on top of everything
+    if (this.showTooltips && points.length > 0) {
+      points.forEach((point, index) => {
+        const labelText = this.tooltipLabelFormat ? 
+                         this.tooltipLabelFormat(this.xAxisLabels[index] || `Point ${index + 1}`) : 
+                         (this.xAxisLabels[index] || `Point ${index + 1}`);
+        const valueText = this.tooltipValueFormat ? 
+                         this.tooltipValueFormat(point.value || point.y) : 
+                         (point.value || point.y).toString();
+        const titleText = this.tooltipTitleFormat ? 
+                         this.tooltipTitleFormat(point, index) : 
+                         labelText;
+
+        const tooltipWidth = 140;
+        const tooltipHeight = 60;
+        const tooltipX = point.x - tooltipWidth/2;
+        const tooltipY = point.y - tooltipHeight - 12;
+
+        // Check if custom tooltip content is provided
+        if (this.tooltipCustomContent) {
+          svg += this.tooltipCustomContent(point, index, this.lineColor, tooltipX, tooltipY, tooltipWidth, tooltipHeight);
+        } else {
+          // Default tooltip content
+          svg += `<g class="tooltip">
+            <rect class="tooltip-rect" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="${tooltipHeight}" />
+
+            <text class="tooltip-title" x="${tooltipX + 12}" y="${tooltipY + 22}">${titleText}</text>
+
+            <rect class="tooltip-marker" x="${tooltipX + 12}" y="${tooltipY + 34}" width="10" height="10" fill="${this.lineColor}" />
+            <text class="tooltip-label" x="${tooltipX + 28}" y="${tooltipY + 43}">Value</text>
+            <text class="tooltip-value" x="${tooltipX + tooltipWidth - 12}" y="${tooltipY + 43}">${valueText}</text>
+          </g>`;
+        }
+      });
     }
 
-    svg += SVGFactory.closeGroup();
     svg += SVGFactory.closeSVG();
 
     return svg;

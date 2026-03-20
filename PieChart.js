@@ -56,10 +56,13 @@ class PieChart {
   }
 
   render() {
+    // Array to collect tooltips for rendering at the end (to ensure they appear on top)
+    const tooltipsToRender = [];
+
     const centerX = this.width / 2;
     const centerY = this.height / 2;
-    const radius = Math.min(this.width, this.height) / 2 - 20;
-    const holeRadius = radius * this.holeSize;
+    const radius = Math.min(centerX, centerY) - 40;
+    const holeRadius = this.holeSize ? radius * this.holeSize : 0;
 
     const total = this.data.reduce((sum, item) => sum + item.value, 0);
     let currentAngle = 0;
@@ -201,7 +204,7 @@ class PieChart {
           svg += `<text class="center-label" x="${centerX}" y="${centerY}">${centerText}</text>`;
         }
 
-        // Add tooltip (conditional)
+        // Add tooltip to render at the end (conditional)
         if (this.showTooltips) {
           const tooltipWidth = 140;
           const tooltipHeight = 60;
@@ -211,17 +214,26 @@ class PieChart {
           const tooltipPos = polarToCartesian(explodeX, explodeY, tooltipRadius, labelAngle);
 
           // Use custom formatting functions
-          const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(item.label || `Item ${index + 1}`) : (item.label || `Item ${index + 1}`);
+          const rawLabelText = item.label || `Item ${index + 1}`;
+          const labelText = this.tooltipLabelFormat ? this.tooltipLabelFormat(rawLabelText) : rawLabelText;
           const valueText = this.tooltipValueFormat ? this.tooltipValueFormat(item.value) : item.value.toString();
+          const titleText = this.tooltipTitleFormat ? this.tooltipTitleFormat(item, index) : labelText;
           const color = this.sliceColor || this.colors[index] || getColor(index, this.colorPalette);
 
-          svg += `<g class="tooltip">
-            <rect class="tooltip-rect" x="${tooltipPos.x - tooltipWidth/2}" y="${tooltipPos.y - tooltipHeight/2}" width="${tooltipWidth}" height="${tooltipHeight}" />
-            <text class="tooltip-title" x="${tooltipPos.x - tooltipWidth/2 + 12}" y="${tooltipPos.y - tooltipHeight/2 + 22}">${labelText}</text>
-            <rect class="tooltip-marker" x="${tooltipPos.x - tooltipWidth/2 + 12}" y="${tooltipPos.y - tooltipHeight/2 + 34}" width="10" height="10" fill="${color}" />
-            <text class="tooltip-label" x="${tooltipPos.x - tooltipWidth/2 + 28}" y="${tooltipPos.y - tooltipHeight/2 + 43}">Value</text>
-            <text class="tooltip-value" x="${tooltipPos.x + tooltipWidth/2 - 12}" y="${tooltipPos.y - tooltipHeight/2 + 43}">${valueText}</text>
-          </g>`;
+          // Collect tooltip for rendering at the end
+          tooltipsToRender.push({
+            x: tooltipPos.x - tooltipWidth/2,
+            y: tooltipPos.y - tooltipHeight/2,
+            width: tooltipWidth,
+            height: tooltipHeight,
+            title: titleText,
+            label: labelText,
+            value: valueText,
+            color: color,
+            customContent: this.tooltipCustomContent,
+            item: item,
+            index: index
+          });
         }
 
         svg += SVGFactory.closeGroup();
@@ -230,6 +242,23 @@ class PieChart {
     });
 
     svg += SVGFactory.closeGroup();
+
+    // Render all tooltips at the very end to ensure they appear on top
+    tooltipsToRender.forEach(tooltip => {
+      if (tooltip.customContent) {
+        svg += tooltip.customContent(tooltip.item, tooltip.index, tooltip.color, tooltip.x, tooltip.y, tooltip.width, tooltip.height);
+      } else {
+        // Default tooltip content
+        svg += `<g class="tooltip">
+          <rect class="tooltip-rect" x="${tooltip.x}" y="${tooltip.y}" width="${tooltip.width}" height="${tooltip.height}" />
+          <text class="tooltip-title" x="${tooltip.x + 12}" y="${tooltip.y + 22}">${tooltip.title}</text>
+          <rect class="tooltip-marker" x="${tooltip.x + 12}" y="${tooltip.y + 34}" width="10" height="10" fill="${tooltip.color}" />
+          <text class="tooltip-label" x="${tooltip.x + 28}" y="${tooltip.y + 43}">Value</text>
+          <text class="tooltip-value" x="${tooltip.x + tooltip.width - 12}" y="${tooltip.y + 43}">${tooltip.value}</text>
+        </g>`;
+      }
+    });
+
     svg += SVGFactory.closeSVG();
 
     return svg;

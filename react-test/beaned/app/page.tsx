@@ -49,22 +49,22 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50 dark:bg-black p-8">
-      <h1 className="text-4xl font-bold mb-8 text-black dark:text-zinc-50">Beaned-Charts Demo</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-transparent p-8">
+      <h1 className="text-4xl font-bold mb-8 text-gray-700 dark:text-gray-300 opacity-80">Beaned-Charts Demo</h1>
       <div className="space-y-12 w-full max-w-4xl">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-black dark:text-zinc-50">Area Chart</h2>
-          <p className="text-zinc-600 dark:text-zinc-400 mb-4">Multi-series area chart showing desktop and mobile data over time.</p>
+        <div className="bg-white/10 dark:bg-gray-900/20 backdrop-blur-sm p-6 rounded-lg shadow-sm border border-white/20">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300 opacity-80">Area Chart</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 opacity-70">Multi-series area chart showing desktop and mobile data over time.</p>
           <div dangerouslySetInnerHTML={{ __html: charts.area }} />
         </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-black dark:text-zinc-50">Bar Chart</h2>
-          <p className="text-zinc-600 dark:text-zinc-400 mb-4">Product comparison bar chart with hover tooltips.</p>
+        <div className="bg-white/10 dark:bg-gray-900/20 backdrop-blur-sm p-6 rounded-lg shadow-sm border border-white/20">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300 opacity-80">Bar Chart</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 opacity-70">Product comparison bar chart with hover tooltips.</p>
           <div dangerouslySetInnerHTML={{ __html: charts.bar }} />
         </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-black dark:text-zinc-50">Line Chart</h2>
-          <p className="text-zinc-600 dark:text-zinc-400 mb-4">Smooth line chart with enhanced data points.</p>
+        <div className="bg-white/10 dark:bg-gray-900/20 backdrop-blur-sm p-6 rounded-lg shadow-sm border border-white/20">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300 opacity-80">Line Chart</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4 opacity-70">Smooth line chart with enhanced data points.</p>
           <div dangerouslySetInnerHTML={{ __html: charts.line }} />
         </div>
       </div>
